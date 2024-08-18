@@ -10,6 +10,9 @@ import { useState, useEffect } from "react";
 
 function App() {
   const [weather, setWeather] = useState();
+  const cities = ["paris", "new york", "tokyo", "seoul"];
+  const [selectBt, setSelectBt] = useState("현재위치");
+  const [loading, setLoading] = useState(true);
 
   const getCurrentLocation = () => {
     navigator.geolocation.getCurrentPosition(
@@ -21,21 +24,24 @@ function App() {
       },
       (error) => {
         console.error(error);
+        // alert("현재 위치를 불러올 수 없어 서울로 설정합니다.");
         let fixLat = 37.57172739654245;
         let fixLon = 126.99401182637855;
         getWeatherByCurrentLocation(fixLat, fixLon);
       }
     );
   };
-
   const getWeatherByCurrentLocation = async (lat, lon) => {
+    setSelectBt("현재위치");
+
     try {
-      let url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${"289933327225705a87c1c131ea5628f1"}`;
+      setLoading(true);
+      let url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&lang=kr&appid=${process.env.REACT_APP_API_KEY}`;
       let response = await fetch(url);
       let data = await response.json();
-      console.log(data);
 
       setWeather(data);
+      setLoading(false);
     } catch (error) {
       console.error(error);
     }
@@ -46,22 +52,64 @@ function App() {
     return celsius.toFixed(2);
   }
 
+  const searchByCity = async (cityName) => {
+    setSelectBt(cityName);
+    try {
+      setLoading(true);
+      let url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${process.env.REACT_APP_API_KEY}`;
+      let response = await fetch(url);
+      let data = await response.json();
+      setWeather(data);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     getCurrentLocation();
   }, []);
 
   return (
     <div>
-      <h2>{weather?.name}</h2>
-      <h3>{kelvinToCelsius(weather?.main.temp)}</h3>
-      <p>{weather?.weather[0].main}</p>
-      <section>
-        <button>현재위치</button>
-        <button>지정위치</button>
-        <button>지정위치</button>
-        <button>지정위치</button>
-        <button>지정위치</button>
-      </section>
+      {loading ? (
+        <>로딩중..</>
+      ) : (
+        <>
+          <h2 style={{ borderBottom: "1px solid black", padding: "10px" }}>
+            {weather?.name}
+          </h2>
+          <h3 style={{ borderBottom: "1px solid black", padding: "10px" }}>
+            {kelvinToCelsius(weather?.main.temp)}
+          </h3>
+          <p style={{ borderBottom: "1px solid black", padding: "10px" }}>
+            {weather?.weather[0].main}
+          </p>
+          <section>
+            <button
+              onClick={() => getCurrentLocation()}
+              style={{
+                backgroundColor: selectBt === "현재위치" ? "f5f5f7" : "#fff",
+                padding: "10px",
+              }}
+            >
+              현재위치
+            </button>
+            {cities.map((item, index) => (
+              <button
+                key={index}
+                onClick={() => searchByCity(item)}
+                style={{
+                  backgroundColor: selectBt === item ? "f5f5f7" : "#fff",
+                  padding: "10px",
+                }}
+              >
+                {item}
+              </button>
+            ))}
+          </section>
+        </>
+      )}
     </div>
   );
 }
