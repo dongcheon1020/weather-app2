@@ -41,7 +41,7 @@ function App() {
       let data = await response.json();
 
       setWeather(data);
-      setLoading(false);
+      if (data !== "") return setLoading(false);
     } catch (error) {
       console.error(error);
     }
@@ -60,7 +60,7 @@ function App() {
       let response = await fetch(url);
       let data = await response.json();
       setWeather(data);
-      setLoading(false);
+      if (data !== "") return setLoading(false);
     } catch (error) {
       console.error(error);
     }
