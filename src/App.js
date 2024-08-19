@@ -24,7 +24,7 @@ function App() {
       },
       (error) => {
         console.error(error);
-        // alert("현재 위치를 불러올 수 없어 서울로 설정합니다.");
+        // alert("현재 위치를 불러올 수 없어 지정위치로 설정합니다.");
         let fixLat = 37.57172739654245;
         let fixLon = 126.99401182637855;
         getWeatherByCurrentLocation(fixLat, fixLon);
@@ -71,26 +71,114 @@ function App() {
   }, []);
 
   return (
-    <div>
+    <div
+      style={{
+        backgroundColor: "#f5f5f7",
+        width: "100vw",
+        height: "100vh",
+        padding: "20px",
+        boxSizing: "border-box",
+      }}
+    >
       {loading ? (
         <>로딩중..</>
       ) : (
         <>
-          <h2 style={{ borderBottom: "1px solid black", padding: "10px" }}>
-            {weather?.name}
-          </h2>
-          <h3 style={{ borderBottom: "1px solid black", padding: "10px" }}>
-            {kelvinToCelsius(weather?.main.temp)}
-          </h3>
-          <p style={{ borderBottom: "1px solid black", padding: "10px" }}>
-            {weather?.weather[0].main}
-          </p>
+          <h1 style={{ marginBottom: "30px" }}>날씨</h1>
+          <section
+            style={{
+              backgroundColor: "#fff",
+              marginBottom: "10px",
+              borderRadius: "18px",
+              padding: "18px",
+              boxSizing: "border-box",
+            }}
+          >
+            <h3
+              style={{
+                fontSize: "12px",
+                color: "#999",
+              }}
+            >
+              지역
+            </h3>
+            <p
+              style={{
+                padding: "10px",
+                fontWeight: "bold",
+                color: "1d1d1f",
+                boxSizing: "border-box",
+              }}
+            >
+              {weather?.name}
+            </p>
+          </section>
+          <section
+            style={{
+              backgroundColor: "#fff",
+              marginBottom: "10px",
+              borderRadius: "18px",
+              padding: "18px",
+              boxSizing: "border-box",
+            }}
+          >
+            <h3
+              style={{
+                fontSize: "12px",
+                color: "#999",
+              }}
+            >
+              기온
+            </h3>
+
+            <p
+              style={{
+                padding: "10px",
+                fontWeight: "bold",
+                color: "1d1d1f",
+                boxSizing: "border-box",
+              }}
+            >
+              {kelvinToCelsius(weather?.main.temp)}
+            </p>
+          </section>
+          <section
+            style={{
+              backgroundColor: "#fff",
+              marginBottom: "10px",
+              borderRadius: "18px",
+              padding: "18px",
+              boxSizing: "border-box",
+            }}
+          >
+            <h3
+              style={{
+                fontSize: "12px",
+                color: "#999",
+              }}
+            >
+              날씨
+            </h3>
+
+            <p
+              style={{
+                padding: "10px",
+                fontWeight: "bold",
+                color: "1d1d1f",
+                boxSizing: "border-box",
+              }}
+            >
+              {weather?.weather[0].main}
+            </p>
+          </section>
+
           <section>
             <button
               onClick={() => getCurrentLocation()}
               style={{
                 backgroundColor: selectBt === "현재위치" ? "f5f5f7" : "#fff",
                 padding: "10px",
+                boxSizing: "border-box",
               }}
             >
               현재위치
@@ -102,6 +190,7 @@ function App() {
                 style={{
                   backgroundColor: selectBt === item ? "f5f5f7" : "#fff",
                   padding: "10px",
+                  boxSizing: "border-box",
                 }}
               >
                 {item}
